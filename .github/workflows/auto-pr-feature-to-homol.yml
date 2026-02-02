@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   open_pr:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Create or update PR to homol
         env:
