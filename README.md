@@ -11,3 +11,4 @@ sam deploy --config-env prod
 
 ## Destroy
 sam delete --stack-name hairdule
+
