@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Hairdule - Lambda Hello World (Python) - no gateway
+
+Parameters:
+  Stage:
+    Type: String
+    AllowedValues: [homol, prod]
+    Default: homol
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 10
+    MemorySize: 128
+    Tracing: Active
+    Environment:
+      Variables:
+        APP_NAME: "hairdule"
+        STAGE: !Ref Stage
+    Tags:
+      app: hairdule
+      stage: !Ref Stage
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: hairdule-hello-world
+      CodeUri: ../app/
+      Handler: app.handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  FunctionName:
+    Value: !Ref HelloWorldFunction
+  FunctionArn:
+    Value: !GetAtt HelloWorldFunction.Arn

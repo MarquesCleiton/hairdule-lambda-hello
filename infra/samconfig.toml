@@ -1,0 +1,19 @@
+version = 0.1
+
+[homol.deploy.parameters]
+stack_name = "hairdule"
+region = "sa-east-1"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false
+parameter_overrides = "Stage=homol"
+
+[prod.deploy.parameters]
+stack_name = "hairdule"
+region = "sa-east-1"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false
+parameter_overrides = "Stage=prod"
