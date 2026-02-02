@@ -1,0 +1,44 @@
+name: Auto PR (feature -> homol)
+
+on:
+  push:
+    branches:
+      - "feature/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or update PR to homol
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          BRANCH="${GITHUB_REF_NAME}"
+          BASE="homol"
+          LABEL="auto-pr"
+
+          # Se já existir PR aberto desse head -> base, não cria outro
+          EXISTING=$(gh pr list --state open --head "$BRANCH" --base "$BASE" --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING" ]; then
+            echo "PR já existe (#$EXISTING): $BRANCH -> $BASE"
+            gh pr edit "$EXISTING" --add-label "$LABEL" || true
+            exit 0
+          fi
+
+          TITLE="feat: ${BRANCH} -> ${BASE}"
+          BODY=$'PR criado automaticamente.\n\nAssinatura: auto-pr\nFluxo: feature/* -> homol'
+
+          URL=$(gh pr create \
+            --base "$BASE" \
+            --head "$BRANCH" \
+            --title "$TITLE" \
+            --body "$BODY")
+
+          echo "PR criado: $URL"
+          gh pr edit "$URL" --add-label "$LABEL"
